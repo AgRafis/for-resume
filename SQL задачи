@@ -1,0 +1,87 @@
+--	Найти информацию о всех контрактах, связанных с сотрудниками департамента «Logistic». Вывести: contract_id, employee_name
+SELECT contract.id, employees.name FROM employees 
+JOIN department ON employees.department_id = department.id
+JOIN executor ON employees.id = executor.tab_no
+JOIN contract ON executor.contract_id = contract.id
+JOIN customer ON contract.customer_id = customer.id
+WHERE department.name = 'Logistic'
+
+--	Найти среднюю стоимость контрактов, заключенных сотрудников Ivan Ivanov. Вывести: среднее значение amount
+SELECT ROUND(AVG(contract.amount),2) FROM employees 
+JOIN department ON employees.department_id = department.id
+JOIN executor ON employees.id = executor.tab_no
+JOIN contract ON executor.contract_id = contract.id
+JOIN customer ON contract.customer_id = customer.id
+WHERE employees.id = 1
+--id у Ivan Ivanov = 1
+--WHERE employees.name = 'Ivan Ivanov', можно и с таким условием вывести,
+--но по id будет правильнее, т.к. ФИО сотрудника может быть одинаковой.
+
+--	Найти самую часто встречающуюся локации среди всех заказчиков. Вывести: location, count
+SELECT customer.location, COUNT(customer.location) FROM employees 
+JOIN department ON employees.department_id = department.id
+JOIN executor ON employees.id = executor.tab_no
+JOIN contract ON executor.contract_id = contract.id
+JOIN customer ON contract.customer_id = customer.id
+GROUP BY customer.location
+HAVING COUNT(customer.location) = (SELECT COUNT(customer.location) FROM employees 
+	JOIN department ON employees.department_id = department.id
+	JOIN executor ON employees.id = executor.tab_no
+	JOIN contract ON executor.contract_id = contract.id
+	JOIN customer ON contract.customer_id = customer.id
+	GROUP BY customer.location
+	ORDER BY COUNT(customer.location) DESC
+	LIMIT 1)
+--Подзапрос также можно ввести, объединив только 2 таблицы:
+--(SELECT COUNT(customer.location) FROM contract 
+--JOIN customer ON contract.customer_id = customer.id
+--GROUP BY customer.location
+--ORDER BY COUNT(customer.location) DESC
+--LIMIT 1)
+
+--	Найти контракты одинаковой стоимости. Вывести count, amount
+SELECT COUNT(contract.amount), contract.amount FROM employees 
+JOIN department ON employees.department_id = department.id
+JOIN executor ON employees.id = executor.tab_no
+JOIN contract ON executor.contract_id = contract.id
+JOIN customer ON contract.customer_id = customer.id
+GROUP BY contract.amount
+HAVING COUNT(contract.amount) > 1
+
+--	Найти заказчика с наименьшей средней стоимостью контрактов. Вывести customer_name, среднее значение amount
+SELECT customer.customer_name, ROUND(AVG(contract.amount),2) FROM employees 
+JOIN department ON employees.department_id = department.id
+JOIN executor ON employees.id = executor.tab_no
+JOIN contract ON executor.contract_id = contract.id
+JOIN customer ON contract.customer_id = customer.id
+GROUP BY customer.customer_name
+HAVING AVG(contract.amount) = (SELECT AVG(contract.amount) FROM employees 
+	JOIN department ON employees.department_id = department.id
+	JOIN executor ON employees.id = executor.tab_no
+	JOIN contract ON executor.contract_id = contract.id
+	JOIN customer ON contract.customer_id = customer.id
+	GROUP BY customer.customer_name
+	ORDER BY AVG(contract.amount)
+	LIMIT 1)
+--Подзапрос также можно ввести, объединив только 2 таблицы:
+--(SELECT AVG(contract.amount) FROM contract 
+--JOIN customer ON contract.customer_id = customer.id
+--GROUP BY customer.customer_name
+--ORDER BY AVG(contract.amount)
+--LIMIT 1)
+
+--	Найти отдел, заключивший контрактов на наибольшую сумму. Вывести: department_name, sum
+SELECT dep.name AS depe, SUM(cn.amount) FROM employees em
+JOIN department dep ON em.department_id = dep.id
+JOIN executor ex ON em.id = ex.tab_no
+JOIN contract cn ON ex.contract_id = cn.id
+JOIN customer cs ON cn.customer_id = cs.id
+GROUP BY dep.name
+HAVING SUM(cn.amount) = (SELECT SUM(contract.amount) FROM employees 
+	JOIN department ON employees.department_id = department.id
+	JOIN executor ON employees.id = executor.tab_no
+	JOIN contract ON executor.contract_id = contract.id
+	JOIN customer ON contract.customer_id = customer.id --Эту связь можно убрать, а можно оставить
+	GROUP BY department.name
+	ORDER BY SUM(contract.amount) DESC
+	LIMIT 1)
