@@ -1,0 +1,35 @@
+import com.microsoft.playwright.options.*;
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Playwright;
+
+//Простенький тест сайта DNS
+
+public class PlayWrightKit {
+    public static void main(String[] args) {
+        Playwright playwright = Playwright.create();
+        Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        Page page = browser.newPage();
+        String title = page.title();
+        String url = page.url();
+        
+        page.navigate("https://www.dns-shop.ru/");
+        page.getByPlaceholder("Поиск по сайту").click();
+        page.getByPlaceholder("Поиск по сайту").fill("процессор");
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("процессор - Процессоры")).first().click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Intel i7")).click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Процессор Intel Core i7-10700K OEM [LGA 1200, 8 x 3.8 ГГц, L2 - 2 МБ, L3 - 16 МБ, 2хDDR4-2933 МГц, Intel UHD Graphics 630, TDP 125 Вт]")).click();
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Купить")).first().click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("1 23 999₽")).click();
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Удалить")).click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("На главную")).click();
+
+        System.out.println("Заголовок - " + page.title());
+        System.out.println("Путь - " + page.url());
+
+        browser.close();
+        playwright.close();
+        }
+    }
+
