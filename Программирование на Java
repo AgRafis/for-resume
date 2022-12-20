@@ -1,0 +1,37 @@
+public class codingTry1 {
+    public static void print (int val){
+        System.out.println(val);
+    }
+    public static void printMax(int a, int b){
+        if (a>b)
+            System.out.println("Большее число " + a);
+        else
+            if (b>a)
+                System.out.println("Большее число " + b);
+            else
+                System.out.println("Числа одинаковые");
+    }
+    public static int max (int a, int b){
+        if (a>b)
+            return a;
+        else
+            return b;
+    }
+    public static void main(String[] args) {
+        int a=5;
+        int b=15;
+        int maxi=max(a, b);
+        System.out.println("На этот раз большее число " + maxi);
+
+        int x=10;
+        int y=20;
+        System.out.println("А здесь большее число " + max(x, y));
+
+        int a1=11;
+        int b1=22;
+        int c1=11;
+        printMax(a1,b1);
+        printMax(a1,c1);
+        printMax(c1,b1);
+    }
+}
