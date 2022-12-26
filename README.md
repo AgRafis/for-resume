@@ -1,6 +1,8 @@
 Тест-кейсы.
 Пример составления Test cases на TMS Qase, пример Test-Plans и Test Runs.
 Ссылка: https://app.qase.io/public/report/bec782b8169dd728cde572f606f6904cc4a85e5e
+Несколько примеров самих тест-кейсов (скрины с TMS Qase):
+https://drive.google.com/drive/folders/1fJrtl94L4n30w_oCfHTlylCthodVuB40?usp=sharing
 
 Техника тест-дизайна.
 Пример применения техники тест-дизайна: https://drive.google.com/drive/folders/1IvihquoXVHJiRu9iV-isgBWwG8sHTMNy?usp=sharing
